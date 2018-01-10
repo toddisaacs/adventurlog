@@ -1,16 +1,9 @@
-/*
-  Okay folks, want to learn a little bit about webpack?
-*/
 
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-/*
-  webpack sees every file as a module.
-  How to handle those files is up to loaders.
-  We only have a single entry point (a .js file) and everything is required from that js file
-*/
+
 
 // This is our JavaScript rule that specifies what to do with .js files
 const javascript = {
@@ -24,7 +17,6 @@ const javascript = {
 /*
   This is our postCSS loader which gets fed into the next loader. I'm setting it up in it's own variable because its a didgeridog
 */
-
 const postcss = {
   loader: 'postcss-loader',
   options: {

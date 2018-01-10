@@ -1,4 +1,3 @@
-var fs = require('fs');
 var parser = require('xml2js');
 
 /* 
@@ -38,7 +37,7 @@ exports.KMLDataExtract = (kml, callback) => {
     
       });
     });
-  })
+  });
 
   return placemarks;
-}
+};

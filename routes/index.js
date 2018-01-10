@@ -12,6 +12,6 @@ router.post('/upload/kml',
   placemarkerController.uploadKml,
   catchErrors(placemarkerController.extractPlacemarkersFromKML),
   catchErrors(placemarkerController.insertPlacemarkers)
-)
+);
   
 module.exports = router;
