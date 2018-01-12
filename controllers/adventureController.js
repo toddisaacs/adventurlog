@@ -29,3 +29,16 @@ exports.getAdventureById = async (req, res) => {
   res.json(adventure);
 };
 
+exports.searchAdventures = async (req, res) => {
+  const adventures = await Adventure
+    // find stores that match query string
+    .find({
+      // searches 'text' index this is name and desctiption see model
+      $text: {
+        $search: req.query.q
+      }
+    })
+    .limit(5);
+
+  res.json(adventures);
+};

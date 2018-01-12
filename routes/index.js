@@ -43,6 +43,8 @@ router.post('/api/adventures',
   adventureController.upload,
   catchErrors(adventureController.createAdventure));
   
+router.get('/api/adventures/search', catchErrors(adventureController.searchAdventures));
 router.get('/api/adventures/:id', adventureController.getAdventureById);
+
 
 module.exports = router;
