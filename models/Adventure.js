@@ -25,5 +25,10 @@ const adventureSchema = new mongoose.Schema({
   toObject: { virtuals: true }
 });
 
+adventureSchema.index({
+  name: 'text',
+  description: 'text'
+});
+
 
 module.exports = mongoose.model('Adventure', adventureSchema);

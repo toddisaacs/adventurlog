@@ -35,10 +35,14 @@ router.post('/register',
   authController.login
 );
 
+
+
 router.post('/login', authController.login);
 
 router.post('/api/adventures', 
   adventureController.upload,
   catchErrors(adventureController.createAdventure));
+  
+router.get('/api/adventures/:id', adventureController.getAdventureById);
 
 module.exports = router;

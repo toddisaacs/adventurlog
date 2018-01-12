@@ -23,3 +23,9 @@ exports.createAdventure =  async (req, res) => {
 
   res.json(adventure);
 };
+
+exports.getAdventureById = async (req, res) => {
+  const adventure = await Adventure.findOne({_id: req.params.id});
+  res.json(adventure);
+};
+
