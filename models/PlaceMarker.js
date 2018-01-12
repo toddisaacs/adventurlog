@@ -2,12 +2,16 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const placeMarkerSchema = new mongoose.Schema({
-  timestamp: {
-    type: Date
-  },
-  title: {
+  name: {
     type: String,
     trim: true
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  timestamp: {
+    type: Date
   },
   velocity: {
     type: String,
@@ -24,9 +28,14 @@ const placeMarkerSchema = new mongoose.Schema({
     },
     coordinates: [{
       type: Number,
-      required: 'You must supple coordinates!'
+      required: 'You must supply coordinates!'
     }]
-  } 
+  },
+  adventure: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Adventure',
+    required: 'You must supply an Adventure'
+  }
 });
 
 placeMarkerSchema.index({
