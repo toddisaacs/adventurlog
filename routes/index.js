@@ -7,10 +7,10 @@ const adventureController = require('../controllers/adventureController');
 
 const { catchErrors } = require('../handlers/errorHandlers');
 
-// Do work here
-// router.get('/', (req, res) => {
-//   res.send('Hey! It works!');
-// });
+
+router.get('/', (req, res) => {
+  res.render('index', { title: 'Welcome' });
+});
 
 router.post('/upload/kml', 
   placemarkerController.uploadKml,
