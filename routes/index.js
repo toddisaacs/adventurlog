@@ -8,14 +8,13 @@ const adventureController = require('../controllers/adventureController');
 const { catchErrors } = require('../handlers/errorHandlers');
 
 
-router.get('/', (req, res) => {
-  res.render('index', { title: 'Welcome' });
-});
+// router.get('/', (req, res) => {
+//   res.render('index', { title: 'Welcome' });
+// });
 
 router.post('/upload/kml', 
   placemarkerController.uploadKml,
-  //catchErrors(placemarkerController.makePlacemarkerFromKML)
-  placemarkerController.makePlacemarkerFromKML,
+  catchErrors(placemarkerController.makePlacemarkerFromKML),
   catchErrors(placemarkerController.insertPlacemarkers)
 );
   
@@ -44,7 +43,9 @@ router.post('/api/adventures',
   catchErrors(adventureController.createAdventure));
   
 router.get('/api/adventures/search', catchErrors(adventureController.searchAdventures));
+router.get('/api/adventures/near', catchErrors(adventureController.searchNear));
 router.get('/api/adventures/:id', adventureController.getAdventureById);
 
-
+router.post('/api/placemarkers',catchErrors(placemarkerController.insertPlacemarker));
+router.get('/api/placemarkers/:id',catchErrors(placemarkerController.getPlacemarker));
 module.exports = router;

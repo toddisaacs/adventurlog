@@ -28,6 +28,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Takes the raw requests and turns them into usable properties on req.body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ type: 'application/*+json' }));
+app.use(bodyParser.text({ type: 'text/html' }));
 
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
 app.use(expressValidator());
@@ -75,6 +77,7 @@ app.use(errorHandlers.notFound);
 
 // One of our error handlers will see if these errors are just validation errors
 app.use(errorHandlers.flashValidationErrors);
+
 
 // Otherwise this was a really bad error we didn't expect! Shoot eh
 if (app.get('env') === 'development') {

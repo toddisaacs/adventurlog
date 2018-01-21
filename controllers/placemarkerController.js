@@ -3,20 +3,25 @@ var multer  = require('multer');
 var upload = multer();
 const  xmldom = require('xmldom');
 const togeojson = require('togeojson');
+const uuid = require('uuid');
+
 
 const mongoose = require('mongoose');
 const PlaceMarker = mongoose.model('PlaceMarker');
-
+const Adventure = mongoose.model('Adventure');
 
 
 const multerOptions = {
   storage: multer.memoryStorage(),
   fileFilter(req, file, next) {
+    console.log(file.originalname);
     const isKmlExtension = file.originalname.endsWith('.kml');
-    const isKml = file.mimetype.startsWith('application/octet-stream');
-    if (isKml && isKmlExtension) {
+    //const isKml = file.mimetype.startsWith('application/octet-stream');
+    if (isKmlExtension) {
+      console.log("call next");
       next(null, true); // tell the Node chain we are good by passing null as first value
     } else {
+      console.log("error");
       next({ message: 'That file type isn\'t allowed!, Make sure you have a KML file with ".kml" extension.' }, false);
     }
   }
@@ -25,9 +30,24 @@ const multerOptions = {
 /* 
  * Uploads a multipart form data 'kml' and stores in memory and places a reference 
  * on the request for the next middleware to consume. (req.file)
- */ 
+ * */
 exports.uploadKml = multer(multerOptions).single('kml');
 
+exports.test = (req, res) => {
+  res.send("worked");
+}
+
+
+exports.fetchAdventure = async (req, res, next) => {
+  console.log("Adventure " + req.body.adventureId)
+  const id = req.body.adventureId;
+  const adventure = await Adventure.find({
+      _id: id
+  });
+
+  req.body.adventure = adventure;
+  next();
+}
 // {
 //   "name": "Sergio Guerrero (4555718)",
 //   "description": "",
@@ -43,50 +63,52 @@ exports.uploadKml = multer(multerOptions).single('kml');
 //       ]
 //   }
 // },
-exports.makePlacemarkerFromKML = (req, res, next) => {
-  console.log(req.body.adventure);
+exports.makePlacemarkerFromKML = async (req, res, next) => {
+  
 
-  if (!req.file || !req.body.adventure) {
+  if (!req.file || !req.body.adventureId) {
     res.send('no file or adventure ');
     //next(); // no file skip to next item in middleware chain
   } else {
-   const adventureId = req.body.adventure;
-
-
+    const adventureId = req.body.adventureId;
+   
     //converts to an array of 'features'
     const converted = kmlparse.test((new xmldom.DOMParser()).parseFromString(req.file.buffer.toString(), 'text/xml'));
 
     let features = converted.features;
 
     //console.log(placemarkers);
-   
+   const routeId = uuid.v4();
+
     const placemarkers = features.map((geojson) => {
-      
+      const location = geojson.geometry;
       let placemarker = {};
+
+      //only convert Points for now
+  
+        
+      placemarker.adventure = adventureId;
+      placemarker.routeId = routeId;
       placemarker.name= (geojson.properties.Name) ? geojson.properties.Name : '';
       placemarker.description = (geojson.properties.description) ? geojson.properties.description : '';
       placemarker.timestamp = (geojson.properties.timestamp) ? geojson.properties.timestamp : '';
       placemarker.velocity = (geojson.properties.Velocity) ? geojson.properties.Velocity : '';
       placemarker.elevation = (geojson.properties.Elevation) ? geojson.properties.Elevation : '';
-      const location = geojson.geometry;
-
-      if (!location || location.length == 0)  {
-        console.log(location);
-      }
-      if (location.coordinates.length > 2)  {
+      
+      //just use the lat & lng
+      if (location && location.coordinates.length > 2)  {
         location.coordinates = location.coordinates.slice(0,2);
       }
-       
+        
       placemarker.location = location;
-      placemarker.adventure = adventureId;
-
+      
       return placemarker;
-    }).filter(placemark => placemark.location.type === 'Point');
 
-   
+    }).filter(placemark => placemark.location.type === 'Point');
+    
     req.body.placemarkers = placemarkers;
-    //res.send(placemarkers);
     next();
+
   }
 }
 
@@ -124,6 +146,7 @@ exports.makePlacemarkerFromKML = (req, res, next) => {
  */ 
 exports.insertPlacemarkers = async (req, res) => {
   try {
+    //await PlaceMarker.insertMany(req.body.placemarkers);
     await PlaceMarker.insertMany(req.body.placemarkers);
     console.log('👍 Done!');
     res.json(req.body.placemarkers);
@@ -138,4 +161,16 @@ exports.test = async (req, res, next) => {
 
   const converted = kmlparse.test((new xmldom.DOMParser()).parseFromString(req.file.buffer.toString(), 'text/xml'))
  res.json(converted);
+}
+
+exports.insertPlacemarker = async (req, res) => {
+  const placemarker = await (new PlaceMarker(req.body)).save();
+  res.json(placemarker); 
+}
+
+exports.getPlacemarker = async (req, res) => {
+  const placemarker = await PlaceMarker.findById({
+    _id: req.params.id
+  })
+  res.json(placemarker); 
 }

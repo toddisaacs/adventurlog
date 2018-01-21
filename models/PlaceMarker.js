@@ -2,11 +2,20 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const placeMarkerSchema = new mongoose.Schema({
+  adventure: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Adventure',
+    required: 'You must supply an Adventure'
+  },
   name: {
     type: String,
     trim: true
   },
   description: {
+    type: String,
+    trim: true
+  },
+  routeId: {
     type: String,
     trim: true
   },
@@ -21,6 +30,7 @@ const placeMarkerSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+
   location: {
     type: {
       type: String,
@@ -30,16 +40,12 @@ const placeMarkerSchema = new mongoose.Schema({
       type: Number,
       required: 'You must supply coordinates!'
     }]
-  },
-  adventure: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Adventure',
-    required: 'You must supply an Adventure'
   }
 });
 
 placeMarkerSchema.index({
   location: '2dsphere'
 });
+
 
 module.exports = mongoose.model('PlaceMarker', placeMarkerSchema);

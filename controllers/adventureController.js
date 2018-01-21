@@ -42,3 +42,28 @@ exports.searchAdventures = async (req, res) => {
 
   res.json(adventures);
 };
+
+exports.searchNear = async (req, res) => {
+  const {type } = req.query;
+  const coordinates = [req.query.lng, req.query.lat].map(parseFloat);
+  const distance = parseFloat(req.query.distance);
+
+  console.log(coordinates);
+  console.log(distance);
+
+  const query = {
+    startLocation: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates
+        },
+        $maxDistance: distance
+      }
+    }
+  }
+
+  const adventures = await Adventure.find(query).limit(100);
+
+  res.json(adventures);
+};

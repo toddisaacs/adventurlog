@@ -19,8 +19,9 @@ mongoose.connection.on('error', (err) => {
 
 // READY?! Let's go!
 require('./models/User');
-require('./models/PlaceMarker');
 require('./models/Adventure');
+require('./models/PlaceMarker');
+require('./models/Media');
 
 // Start our app!
 const app = require('./app');
