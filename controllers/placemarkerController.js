@@ -174,3 +174,12 @@ exports.getPlacemarker = async (req, res) => {
   })
   res.json(placemarker); 
 }
+
+exports.getPlacemarkers = async (req, res) => {
+  const adventureId = req.params.id;
+
+  const placemarker = await PlaceMarker.find({
+    adventure: adventureId
+  })
+  res.json(placemarker); 
+}

@@ -45,6 +45,7 @@ router.post('/api/adventures',
 router.get('/api/adventures/search', catchErrors(adventureController.searchAdventures));
 router.get('/api/adventures/near', catchErrors(adventureController.searchNear));
 router.get('/api/adventures/:id', adventureController.getAdventureById);
+router.get('/api/adventures/:id/placemarkers', placemarkerController.getPlacemarkers);
 
 router.post('/api/placemarkers',catchErrors(placemarkerController.insertPlacemarker));
 router.get('/api/placemarkers/:id',catchErrors(placemarkerController.getPlacemarker));
