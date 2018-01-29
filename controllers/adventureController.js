@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 const Adventure = mongoose.model('Adventure');
 const multer = require('multer');
@@ -67,3 +68,17 @@ exports.searchNear = async (req, res) => {
 
   res.json(adventures);
 };
+
+  // EXAMPLE: longitude, latitude
+  //const lowerLeftCoordinates = [-85.935908, 25.093510];
+  //const upperRightCoordinates = [ -79.322139,29.829161];
+exports.searchArea = async (req, res) => {
+  const lowerLeftCoordinates = [req.query.lngLowerLeft, req.query.latLowerLeft].map(parseFloat);
+  const upperRightCoordinates = [req.query.lngUpperRight, req.query.latUpperRight].map(parseFloat);
+
+  const query = Adventure.find();
+  query.where('startLocation').within({ box: [lowerLeftCoordinates, upperRightCoordinates] });
+
+  let adventures = await query.exec();
+  res.json(adventures)
+}
