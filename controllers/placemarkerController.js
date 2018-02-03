@@ -49,7 +49,7 @@ exports.fetchAdventure = async (req, res, next) => {
   next();
 }
 // {
-//   "name": "Sergio Guerrero (4555718)",
+//   "name": "Sergio Guerrero (4555714)",
 //   "description": "",
 //   "timestamp": "2018-01-01T14:18:15Z",
 //   "velocity": "9.0700 km/h",
