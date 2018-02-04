@@ -50,6 +50,9 @@ const adventureSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: 'You must supply an Author'
+  },
+  imageURL: {
+    type: String
   }
 });
 // }, {
